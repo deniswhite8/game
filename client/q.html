@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script type="text/javascript" src="low/engine.js"></script>
+	<script type="text/javascript" src="low/input.js"></script>
+	<script type="text/javascript" src="low/img.js"></script>
+	<script type="text/javascript" src="hight/map.js"></script>
+	<script type="text/javascript" src="hight/bot.js"></script>
+	<script type="text/javascript" src="hight/level.js"></script>
+	<script src="http://localhost:1337/socket.io/socket.io.js"></script>
+</head>
+<body>
+	<canvas width="960" height="450" id="c" 
+	style="display: block; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.5); border-radius: 8px;"></canvas>
+
+	<script type="text/javascript">
+		var socket = io.connect('http://localhost', {port: 1337});
+		socket.on("hello", function (data) {
+
+			var eng = new Engine(document.getElementById("c"));
+			var i = eng.input;
+			var level = new Level(eng, data, socket);
+
+			eng.step = function() {
+					level.update();
+					level.draw();
+			}
+			eng.run(60);
+		});
+	</script>
+</body>
+</html>
