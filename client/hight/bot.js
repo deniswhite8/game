@@ -1,61 +1,22 @@
 function Bot() {
 	this.x = this.y = 0;
+	this.state = "";
 	this._render = {};
-	this._speed;
-	this.direction = {x:null, y:null};
 
-	var _this = this;
+	this.draw = function(dx, dy, stay) {
+		if(stay == undefined) stay = this.state;
 
-	var anim = "stay down";
-
-	this.draw = function(name, dx, dy, fl) {
-		if(name == "") name = anim;
-
-		//var half_w = this._render[name].width / 2;
-		//var half_h = this._render[name].height / 2;
-		//if(fl !== undefined) {
-			half_w = half_h = 0;
-		//}
-		this._render[name].draw(this.x+dx-half_w, this.y+dy-half_h);
+		this._render[stay].draw(this.x+dx, this.y+dy);
 	}
 
-	var go_axis = function(d, dir) {
-		if(dir == "x") {
-			if(_this.x > d) anim = "go left";
-			else anim = "go right";
-
-			if(Math.abs(d-_this.x) <= _this._speed) _this.x = d;
-			if(_this.x < d) _this.x += _this._speed;
-			else if(_this.x > d) _this.x -= _this._speed;
-		}
-		else if(dir == "y") {
-			if(_this.y > d) anim = "go up";
-			else anim = "go down";
-
-			if(Math.abs(d-_this.y) <= _this._speed) _this.y = d;
-
-			if(_this.y < d) _this.y += _this._speed;
-			else if(_this.y > d) _this.y -= _this._speed;
-		}
+	this.set = function(obj) {
+		if(obj.x !== undefined) this.x = obj.x;
+		if(obj.y !== undefined) this.y = obj.y;
+		if(obj.state !== undefined) this.state = obj.state;
 	}
 
-	this.go = function() {
-		var x = this.direction.x;
-		var y = this.direction.y;
-
-		if(x === null || y === null) return;
-		if(x == this.x && y == this.y) {
-			this.stop();
-			return;
-		}
-
-		if(x != this.x) go_axis(x, "x");
-		else go_axis(y, "y");
-	}
-
-	this.stop = function() {
-		this.direction = {x:null, y:null};
-		anim = anim.replace("go", "stay");
+	this.get = function() {
+		return {x:this.x, y:this.y, state:this.state};
 	}
 }
 

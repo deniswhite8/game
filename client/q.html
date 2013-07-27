@@ -9,6 +9,8 @@
 	<script type="text/javascript" src="hight/map.js"></script>
 	<script type="text/javascript" src="hight/bot.js"></script>
 	<script type="text/javascript" src="hight/level.js"></script>
+	<script type="text/javascript" src="hight/net.js"></script>
+	<script type="text/javascript" src="hight/player.js"></script>
 	<script src="http://localhost:1337/socket.io/socket.io.js"></script>
 </head>
 <body>
@@ -17,17 +19,17 @@
 
 	<script type="text/javascript">
 		var socket = io.connect('http://localhost', {port: 1337});
+		var eng = new Engine(document.getElementById("c"));
+
 		socket.on("hello", function (data) {
 
-			var eng = new Engine(document.getElementById("c"));
-			var i = eng.input;
-			var level = new Level(eng, data, socket);
+			var tilesets = eng.loadTileSets(data.tilesets);
+			var level = new Level(eng, data, socket, tilesets);
+			eng.level = level;
 
-			eng.step = function() {
-					level.update();
-					level.draw();
-			}
-			eng.run(60);
+			eng.onload(tilesets, function() {
+				eng.run();
+			});
 		});
 	</script>
 </body>

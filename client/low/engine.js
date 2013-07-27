@@ -3,14 +3,16 @@ window.requestAnimFrame = (function(){
           window.webkitRequestAnimationFrame ||
           window.mozRequestAnimationFrame    ||
           window.oRequestAnimationFrame      ||
-          window.msRequestAnimationFrame;
+          window.msRequestAnimationFrame	 ||
+          function( callback ){
+		  	window.setTimeout(callback, 1000 / 60);
+          };
 })();
 
 function Engine(canvas) {
 	var _ctx = canvas.getContext("2d");
 	var _run = false;
-	this.step = null;
-	var _fps = null;
+	this.level = null;
 
 	this.width = canvas.width;
 	this.height = canvas.height;
@@ -31,17 +33,16 @@ function Engine(canvas) {
 
 	var _this = this;
 	var _step = function() {
-		setTimeout(function() {
-				if(_run) {
-	        		requestAnimFrame(_step);
-	        		_this.step();
-        		}
-    		}, 1000/_fps);
+			if(_run) {
+        		requestAnimFrame(_step);
+        		_this.level.update();
+        		_this.level.draw();
+    		}
 	}
 
-	this.run = function(fps) {
-		_fps = fps;
+	this.run = function() {
 		_run = true;
+		this.level.onload();
 		_step();
 	}
 
@@ -54,13 +55,9 @@ function Engine(canvas) {
 	}
 
 	this.onload = function(items, callback) {
-	    if (items.length === undefined) {
-	        items = [items];
-	    }
-
-	    var count = items.length;
+	    var count = Object.keys(items).length;
 	    var loadedImages = 0;
-	    for(var i = 0; i < count; i++) {
+	    for(var i in items) {
 			items[i]._img.onload = function() {
 				if(++loadedImages >= count) {
 					callback();
