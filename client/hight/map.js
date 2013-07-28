@@ -1,4 +1,12 @@
-function Map(map_tileset, gap, d_tileset, size_w, size_h, draw_w, draw_h) { 
+function Map(map_conf, map_tileset, d_tileset, draw_w, draw_h) {
+
+	var gap = map_conf.gap;
+	var size_w = map_conf.size[0];
+	var size_h = map_conf.size[1];
+
+	var _solid = map_conf.solid;
+	var _d_solid = map_conf.decorations.solid;
+
 	_map = new Array(size_h);
 	for(var i = 0; i < size_h; i++)
 		_map[i] = new Array(size_w);
@@ -9,6 +17,8 @@ function Map(map_tileset, gap, d_tileset, size_w, size_h, draw_w, draw_h) {
 
 	var _tiles = {};
 	var _d_tiles = {};
+
+
 
 	sp0 = map_tileset.getSprite(0,0);
 	d_sp0 = d_tileset.getSprite(0,0);
@@ -45,13 +55,15 @@ function Map(map_tileset, gap, d_tileset, size_w, size_h, draw_w, draw_h) {
 		}
 
 		for(var i = 0; i < tiles.length; i++) {
-			var sp = tl_set.getSprite(tiles[i][1], tiles[i][2]);
+			var sp = null;
+			if(tiles[i].length == 3) sp = tl_set.getSprite(tiles[i][1], tiles[i][2]);
+			else sp = tl_set.getAnim(tiles[i][1], tiles[i][2], tiles[i][3]);
 			tl[tiles[i][0]] = sp;
 		}
 	}
 
 	this.isSolid = function(x, y) {
-		return _d_map[y][x] != " ";
+		return x < 0 || y < 0 || x >= size_w || y >= size_h || _solid.indexOf(_map[y][x]) != -1 || _d_solid.indexOf(_d_map[y][x]) != -1;
 	}
 
 	this.draw = function(x, y, dx, dy) {
@@ -78,5 +90,13 @@ function Map(map_tileset, gap, d_tileset, size_w, size_h, draw_w, draw_h) {
 					if(de_tl !== undefined) de_tl.draw(j*this._sp_w + dx, i*this._sp_h + dy,(this._sp_h - this._d_sp_h)/2, this._sp_h - this._d_sp_h);//-8,-16);
 				}
 			}
+	}
+
+	this.map2realCoord = function(x, y) {
+		return [x*this._sp_w, y*this._sp_h];
+	}
+
+	this.real2mapCoord = function(x, y) {
+		return [Math.floor(x/this._sp_w), Math.floor(y/this._sp_h)];
 	}
 }

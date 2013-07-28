@@ -25,7 +25,6 @@ Bot._bots_conf = {};
 Bot.loadBots = function(conf, tilesets) {
 	for(b in conf) {
 		Bot._bots_conf[b] = {};
-		Bot._bots_conf[b].speed = conf[b].speed;
 		Bot._bots_conf[b].render = {};
 		for(i in conf[b].render) {
 			if(conf[b].render[i].length == 2)
@@ -39,6 +38,5 @@ Bot.loadBots = function(conf, tilesets) {
 Bot.get = function(name) {
 	var b = new Bot();
 	b._render = Bot._bots_conf[name].render;
-	b._speed = Bot._bots_conf[name].speed;
 	return b;
 }

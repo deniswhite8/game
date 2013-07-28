@@ -1,14 +1,21 @@
 {
 	"tilesets": {
-		"map": ["img/set.png", 3, 2],
-		"hero": ["img/hero.png", 5, 12],
+		"map": ["img/set.png", 8, 2],
+		"decorations": ["img/decoration.png", 4, 5],
 		"pointer": ["img/dir.png", 5, 2],
-		"decorations": ["img/decoration.png", 4, 5]
+		"hero": ["img/hero.png", 5, 12]
+	},
+
+	"user": {
+		"speed": 1,
+		"type": "hero",
+		"state": "stay down",
+		"x": 0,
+		"y": 0
 	},
 
 	"bots": {
 		"hero": {
-			"speed": 1,
 			"render": {
 				"go right": [1, 4, 10],
 				"go left": [4, 4, 10],
@@ -30,38 +37,41 @@
 	},
 
 	"map": {
-		"tileset": "map",
-
 		"size": [8, 8],
 		"tiles": [["r", 1, 0],
 				  ["g", 2, 0],
-				  ["s", 2, 1],
-				  ["l", 0, 0]],
-
-		"gap": 3,
+				  ["s", 3, 0],
+				  ["l", 0, 0],
+				  ["w", 1, 8, 200]],
 
 		"decorations": {
 			"tiles": [["t", 0, 0],
 					  ["c", 0, 4],
 					  ["g", 2, 0]],
 
-			"data": ["        ",
-					 "tt      ",
-					 "  g   c ",
+			"data": ["  g    t",
+					 "    t  g",
+					 "        ",
+					 "   g  t ",
+					 " c      ",
 					 "        ",
 					 "        ",
-					 "        ",
-					 "        ",
-					 "        "]
+					 "        "],
+
+			"solid": ["t", "c", "g"]
 		},
 
-		"data": ["srrrrrrs",
-				 "rggggggr",
-				 "rgllsssr",
-				 "rssllggr",
-				 "rglllllr",
-				 "rggggggr",
-				 "rggggggr",
-				 "rrrrrrrr"]
+		"data": ["glllllll",
+				 "rgllllll",
+				 "rgllllll",
+				 "rrllllll",
+				 "ssssslll",
+				 "ssssssss",
+				 "wwwwwwww",
+				 "wwwwwwww"],
+
+		"solid": ["w"],
+
+		"gap": 3
 	}
 }
