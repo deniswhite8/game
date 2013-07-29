@@ -4,9 +4,10 @@ function Player(user_conf, map) {
 	var speed = user_conf.speed;
 
 	this.direction = {x:null, y:null};
+	var stage_d = {x:null, y:null};
 	var _this = this;
 
-	var path = null;
+	var path = [];
 
 	this.draw = function(dx, dy) {
 		this.bot.draw(dx, dy);
@@ -47,8 +48,14 @@ function Player(user_conf, map) {
 		var f = false;
 		var s = false;
 
+		if(path[0] !== undefined) _cp = map.real2mapCoord(path[0].x, path[0].y);
+
 		var cp = {x:_cp[0], y:_cp[1]};
 		var cd = {x:_cd[0], y:_cd[1]};
+
+		var t = path[0];
+		path = [];
+		if(t !== undefined) path.push(t);
 
 		while(true) {
 			if(map.isSolid(cp.x, cp.y)) {
@@ -66,9 +73,17 @@ function Player(user_conf, map) {
 					break;
 				}
 			}
+			var c = map.map2realCoord(cp.x, cp.y);
+			path.push({x:c[0], y:c[1]});
 		}
 
 		cp = {x:_cp[0], y:_cp[1]};
+
+		if(!f) {
+			path = [];
+			if(t !== undefined) path.push(t);
+		}
+
 		while(!f) {
 			if(map.isSolid(cp.x, cp.y)) {
 				s = false;
@@ -85,37 +100,44 @@ function Player(user_conf, map) {
 					break;
 				}
 			}
+			var c = map.map2realCoord(cp.x, cp.y);
+			path.push({x:c[0], y:c[1]});
 		}
 
-		if(!f && !s) this.path = 0;
-		else if(f) this.path = "x";
-		else this.path = "y";
+		if(!f && !s) path.pop();
 	}
 
 	this.go = function() {
-		var x = this.direction.x;
-		var y = this.direction.y;
+		if(path[0] === undefined) {
+			this.stop();
+			return;
+		};
+
+		var x = path[0].x;
+		var y = path[0].y;
+
+		var l = path.length;
 
 		if(x === null || y === null) return;
-		if(x == this.bot.x && y == this.bot.y) {
+		if(path[l-1].x == this.bot.x && path[l-1].y == this.bot.y) {
 			this.stop();
 			return;
 		}
 
-		//if(x != this.bot.x) go_axis(x, "x");
-		//else go_axis(y, "y");
-		if(this.path == "x") {
+		if(path[0].x != this.bot.x) {
 			if(x != this.bot.x) go_axis(x, "x");
-			else go_axis(y, "y");
 		}
-		else if(this.path == "y") {
+		else if(path[0].y != this.bot.y) {
 			if(y != this.bot.y) go_axis(y, "y");
-			else go_axis(x, "x");
+		}
+		else {
+			path.shift();
 		}
 	}
 
 	this.stop = function() {
 		this.direction = {x:null, y:null};
+		path = [];
 		this.bot.state = this.bot.state.replace("go", "stay");
 	}
 }
