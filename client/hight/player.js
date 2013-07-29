@@ -1,16 +1,19 @@
-function Player(user_conf, map) {
-	this.bot = Bot.get(user_conf.type);
+function Player(user_conf, map, tilesets, bots) {
+	this.model = Model.get(user_conf.model);
 
 	var speed = user_conf.speed;
+	var armor = user_conf.armor;
 
 	this.direction = {x:null, y:null};
+	this.target = null;
+
 	var stage_d = {x:null, y:null};
 	var _this = this;
 
 	var path = [];
 
 	this.draw = function(dx, dy) {
-		this.bot.draw(dx, dy);
+		this.model.draw(dx, dy);
 	}
 
 	var go_axis = function(d, dir) {
@@ -18,32 +21,32 @@ function Player(user_conf, map) {
 		var r = map.map2realCoord(c[0], c[1]);
 
 		if(dir == "x") {
-			if(_this.bot.x > d) {
-				_this.bot.state = "go left";
+			if(_this.model.x > d) {
+				_this.model.state = "go left";
 			}
 			else {
-				_this.bot.state = "go right";
+				_this.model.state = "go right";
 			}
 
-			if(Math.abs(d-_this.bot.x) <= speed) _this.bot.x = d;
-			if(_this.bot.x < d) _this.bot.x += speed;
-			else if(_this.bot.x > d) _this.bot.x -= speed;
+			if(Math.abs(d-_this.model.x) <= speed) _this.model.x = d;
+			if(_this.model.x < d) _this.model.x += speed;
+			else if(_this.model.x > d) _this.model.x -= speed;
 
 			
 		}
 		else if(dir == "y") {
-			if(_this.bot.y > d) _this.bot.state = "go up";
-			else _this.bot.state = "go down";
+			if(_this.model.y > d) _this.model.state = "go up";
+			else _this.model.state = "go down";
 
-			if(Math.abs(d-_this.bot.y) <= speed) _this.bot.y = d;
+			if(Math.abs(d-_this.model.y) <= speed) _this.model.y = d;
 
-			if(_this.bot.y < d) _this.bot.y += speed;
-			else if(_this.bot.y > d) _this.bot.y -= speed;
+			if(_this.model.y < d) _this.model.y += speed;
+			else if(_this.model.y > d) _this.model.y -= speed;
 		}
 	}
 
 	this.findPath = function() {
-		var _cp = map.real2mapCoord(this.bot.x, this.bot.y);
+		var _cp = map.real2mapCoord(this.model.x, this.model.y);
 		var _cd = map.real2mapCoord(this.direction.x, this.direction.y);
 		var f = false;
 		var s = false;
@@ -119,16 +122,16 @@ function Player(user_conf, map) {
 		var l = path.length;
 
 		if(x === null || y === null) return;
-		if(path[l-1].x == this.bot.x && path[l-1].y == this.bot.y) {
+		if(path[l-1].x == this.model.x && path[l-1].y == this.model.y) {
 			this.stop();
 			return;
 		}
 
-		if(path[0].x != this.bot.x) {
-			if(x != this.bot.x) go_axis(x, "x");
+		if(path[0].x != this.model.x) {
+			if(x != this.model.x) go_axis(x, "x");
 		}
-		else if(path[0].y != this.bot.y) {
-			if(y != this.bot.y) go_axis(y, "y");
+		else if(path[0].y != this.model.y) {
+			if(y != this.model.y) go_axis(y, "y");
 		}
 		else {
 			path.shift();
@@ -138,6 +141,11 @@ function Player(user_conf, map) {
 	this.stop = function() {
 		this.direction = {x:null, y:null};
 		path = [];
-		this.bot.state = this.bot.state.replace("go", "stay");
+		this.model.state = this.model.state.replace("go", "stay");
+	}
+
+	this.setTarget = function(x, y) {
+		this.direction = {x:x, y:y};
+		this.findPath();
 	}
 }

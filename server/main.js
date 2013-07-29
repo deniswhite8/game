@@ -35,6 +35,8 @@ function clone(obj)
 	return temp;
 }
 
+
+bots["4r4389j3f3f"] = {model:"drop", x:100, y:100, state:"go"};
 function ok(data) {
 	io.sockets.on("connection", function (socket) {
 		data.user.id = socket.id;

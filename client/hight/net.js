@@ -1,6 +1,7 @@
 function Net(socket, data) {
 
 	this.mas = {};
+
 	var _this = this;
 	var user_data = {x:null, y:null, state:null};
 
@@ -20,13 +21,13 @@ function Net(socket, data) {
 		var m = data.bots_mas;
 
 		for(i in m) {
-			this.mas[i] = Bot.get(m[i].type);
+			this.mas[i] = Model.get(m[i].model);
 			this.mas[i].set(m[i]);
 		}
 	}
 
 	socket.on("new", function(data) {
-		var b = Bot.get(data.type);
+		var b = Model.get(data.model);
 		b.set(data);
 
 		_this.mas[data.id] = b;

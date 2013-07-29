@@ -3,36 +3,62 @@
 		"map": ["img/set.png", 8, 2],
 		"decorations": ["img/decoration.png", 4, 5],
 		"pointer": ["img/dir.png", 5, 2],
-		"hero": ["img/hero.png", 5, 12]
+		"hero leatherarmor": ["img/leatherarmor.png", 5, 12],
+		"hero": ["img/hero.png", 5, 12],
+		"drop": ["img/drop.png", 6, 1],
+		"chest": ["img/chest.png", 1, 1]
 	},
 
 	"user": {
 		"speed": 1,
-		"type": "hero",
+		"model": "hero",
 		"state": "stay down",
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"armor": ""
 	},
 
-	"bots": {
-		"hero": {
-			"render": {
-				"go right": [1, 4, 10],
-				"go left": [4, 4, 10],
-				"go up": [7, 4, 10],
-				"go down": [10, 4, 10],
+	"items": {
+		"leather armor": {
+			"type": "armor",
 
-				"stay right": [2, 2, 40],
-				"stay left": [5, 2, 40],
-				"stay up": [8, 2, 40],
-				"stay down": [11, 2, 40]
-			}
+			"tileset": "leatherarmor",
+			"armors": 3
+		}
+	},
+
+	"models": {
+		"hero": {
+			"go right": [1, 4, 200],
+			"go left": [4, 4, 200],
+			"go up": [7, 4, 200],
+			"go down": [10, 4, 200],
+
+			"stay right": [2, 2, 800],
+			"stay left": [5, 2, 800],
+			"stay up": [8, 2, 800],
+			"stay down": [11, 2, 800]
+		},
+		"hero leatherarmor": {
+			"go right": [1, 4, 200],
+			"go left": [4, 4, 200],
+			"go up": [7, 4, 200],
+			"go down": [10, 4, 200],
+
+			"stay right": [2, 2, 800],
+			"stay left": [5, 2, 800],
+			"stay up": [8, 2, 800],
+			"stay down": [11, 2, 800]
 		},
 		"pointer": {
-			"render": {
-				"go": [0, 4, 5],
-				"stop": [4, 0]
-			}
+			"go": [0, 4, 100],
+			"stop": [4, 0]
+		},
+		"drop": {
+			"go": [0, 6, 400]
+		},
+		"chest": {
+			"stay": [0, 0]
 		}
 	},
 
@@ -42,7 +68,7 @@
 				  ["g", 2, 0],
 				  ["s", 3, 0],
 				  ["l", 0, 0],
-				  ["w", 1, 8, 200]],
+				  ["w", 1, 8, 600]],
 
 		"decorations": {
 			"tiles": [["t", 0, 0],

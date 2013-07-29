@@ -45,13 +45,13 @@ function Sprite() {
 function Anim() {
 	this.width = this.height = this._tileset = this._line_y = this._count = this._ctx = this._delay = null;
 	var _step, _cur;
-	_step = _cur = 0;
+	var _cur = 0;
 	var _this = this;
+	var _old = new Date().getTime();
 
 	var play = function() {
-		_step++;
-		if(_step >= _this._delay) {
-			_step = 0;
+		if(new Date().getTime() >= _old + _this._delay) {
+			_old = new Date().getTime();
 			_cur++;
 			if(_cur >= _this._count) _cur = 0;
 		}
